@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ Smart Quote Generator</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#667eea,#764ba2);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:520px;
+text-align:center;
+}
+
+h1{
+margin-bottom:15px;
+}
+
+select{
+padding:10px;
+border-radius:10px;
+border:none;
+margin-bottom:15px;
+}
+
+.quote-box{
+background:white;
+color:black;
+padding:30px;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+margin-bottom:20px;
+}
+
+#quote{
+font-size:20px;
+margin-bottom:10px;
+line-height:1.4;
+}
+
+#author{
+color:#555;
+}
+
+.buttons{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:20px;
+background:#ff7a18;
+color:white;
+cursor:pointer;
+transition:0.25s;
+font-size:14px;
+}
+
+button:hover{
+background:#ff3c00;
+transform:scale(1.05);
+}
+
+@media(max-width:500px){
+
+#quote{
+font-size:18px;
+}
+
+button{
+font-size:13px;
+padding:8px 14px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>💡 Smart Quote Generator</h1>
+
+<select id="mood">
+
+<option value="all">✨ All Quotes</option>
+<option value="motivation">🔥 Motivation</option>
+<option value="happy">😊 Happy</option>
+<option value="success">🏆 Success</option>
+<option value="life">🌿 Life</option>
+
+</select>
+
+<div class="quote-box">
+
+<p id="quote">Click Generate to see a quote ✨</p>
+<p id="author"></p>
+
+</div>
+
+<div class="buttons">
+
+<button onclick="generateQuote()">🎲 Generate</button>
+<button onclick="copyQuote()">📋 Copy</button>
+<button onclick="editQuote()">✏️ Edit</button>
+<button onclick="toggleAuto()">🔁 Auto</button>
+<button onclick="saveFavorite()">⭐ Favorite</button>
+<button onclick="shareQuote()">📤 Share</button>
+
+</div>
+
+</div>
+
+<script>
+
+const baseQuotes=[
+
+{quote:"Success is not final, failure is not fatal.",author:"Winston Churchill",type:"success"},
+{quote:"Believe you can and you're halfway there.",author:"Theodore Roosevelt",type:"motivation"},
+{quote:"Dream big and dare to fail.",author:"Norman Vaughan",type:"motivation"},
+{quote:"Happiness depends upon ourselves.",author:"Aristotle",type:"happy"},
+{quote:"Life is really simple but we insist on making it complicated.",author:"Confucius",type:"life"},
+{quote:"Turn your wounds into wisdom.",author:"Oprah Winfrey",type:"life"},
+{quote:"The purpose of our lives is to be happy.",author:"Dalai Lama",type:"happy"},
+{quote:"Don't watch the clock; do what it does.",author:"Sam Levenson",type:"motivation"},
+{quote:"Success usually comes to those who are too busy.",author:"Henry David Thoreau",type:"success"}
+
+];
+
+let quotes=[];
+
+for(let i=0;i<60;i++){
+quotes=quotes.concat(baseQuotes);
+}
+
+const quoteText=document.getElementById("quote");
+const authorText=document.getElementById("author");
+const moodSelect=document.getElementById("mood");
+
+let autoInterval=null;
+
+function generateQuote(){
+
+let mood=moodSelect.value;
+
+let filtered=quotes;
+
+if(mood!=="all"){
+filtered=quotes.filter(q=>q.type===mood);
+}
+
+let random=Math.floor(Math.random()*filtered.length);
+
+quoteText.innerText=filtered[random].quote;
+authorText.innerText="— "+filtered[random].author;
+
+}
+
+function copyQuote(){
+
+navigator.clipboard.writeText(quoteText.innerText);
+
+alert("Quote copied 📋");
+
+}
+
+function editQuote(){
+
+let newQuote=prompt("Edit quote");
+
+if(newQuote){
+quoteText.innerText=newQuote;
+}
+
+}
+
+function toggleAuto(){
+
+if(autoInterval){
+
+clearInterval(autoInterval);
+autoInterval=null;
+alert("Auto stopped");
+
+}else{
+
+autoInterval=setInterval(generateQuote,3000);
+alert("Auto started 🔁");
+
+}
+
+}
+
+function saveFavorite(){
+
+localStorage.setItem("favoriteQuote",quoteText.innerText);
+
+alert("Saved to favorites ⭐");
+
+}
+
+function shareQuote(){
+
+let text=quoteText.innerText;
+
+let url="https://twitter.com/intent/tweet?text="+encodeURIComponent(text);
+
+window.open(url);
+
+}
+
+</script>
+
+</body>
+</html>
